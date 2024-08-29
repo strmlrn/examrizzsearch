@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExamRizz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="dev2.css">
+</head>
+<body>
+    <div class="main-container">
+        <aside class="sidebar">
+            <h2>Recent Searches</h2>
+            <button id="view-all-searches">View All Searches</button>
+            <ul id="recent-searches">
+                <!-- Recent searches will be populated here -->
+            </ul>
+        </aside>
+        <main>
+            <div id="welcome-message"></div>
+            <div class="search-container">
+                <div class="search-wrapper">
+                    <input type="text" id="search-input" placeholder="Search for study materials...">
+                    <button id="search-button"><i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+            <div id="results-container">
+                <div id="results"></div>
+            </div>
+        </main>
+    </div>
+    <footer>
+        <div class="social-icons">
+            <a href="#" class="icon"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="icon"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="icon"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.youtube.com/@examrizz" class="icon"><i class="fab fa-youtube"></i></a>
+            <a href="#" class="icon"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+        <div class="rights">© 2024 ExamRizz. All rights reserved.</div>
+    </footer>
+    <div id="recent-searches-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>All Recent Searches</h2>
+            <ul id="all-recent-searches"></ul>
+        </div>
+    </div>
+    <script src="dev2.js"></script>
+</body>
+</html>
