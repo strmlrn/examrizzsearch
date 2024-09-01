@@ -1,68 +1,37 @@
 const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
-const cors = require('cors');
-const config = require('./config');
+const {Storage} = require('@google-cloud/storage');
 
+// Initialize Express app
 const app = express();
+const port = process.env.PORT || 8080;
 
-// Enable CORS for allowed origins
-app.use(cors({
-  origin: function(origin, callback) {
-    if (!origin) return callback(null, true);
-    if (config.allowedOrigins.indexOf(origin) === -1) {
-      var msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
+// Initialize Google Cloud Storage client
+const storage = new Storage();
+const BUCKET_NAME = 'examrizzsearch';
+const bucket = storage.bucket(BUCKET_NAME);
+
+// Define a route for searching
+app.get('/search', async (req, res) => {
+    try {
+        const query = req.query.query;
+        if (!query) {
+            return res.status(400).json({ error: 'Query parameter is required' });
+        }
+
+        // List files in the bucket
+        const [files] = await bucket.getFiles();
+        const results = files
+            .map(file => file.name)
+            .filter(name => name.includes(query));
+
+        res.json(results);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
-    return callback(null, true);
-  }
-}));
-
-// Connect to the SQLite database
-const db = new sqlite3.Database(config.databasePath, (err) => {
-  if (err) {
-    console.error('Error connecting to the database:', err.message);
-  } else {
-    console.log('Connected to the database.');
-  }
-});
-
-// Search API endpoint
-app.get('/api/search', (req, res) => {
-  const query = req.query.q;
-  
-  if (!query) {
-    return res.status(400).json({ error: 'Query parameter is required' });
-  }
-
-  const sql = `
-    SELECT * FROM examrizz_content
-    WHERE title LIKE ? OR content LIKE ?
-    LIMIT 20
-  `;
-  const params = [`%${query}%`, `%${query}%`];
-
-  db.all(sql, params, (err, rows) => {
-    if (err) {
-      console.error('Error executing search query:', err.message);
-      return res.status(500).json({ error: 'An error occurred while searching' });
-    }
-    res.json(rows);
-  });
 });
 
 // Start the server
-app.listen(config.port, () => {
-  console.log(`Server running at http://localhost:${config.port}`);
-});
-
-// Close the database connection when the server is stopped
-process.on('SIGINT', () => {
-  db.close((err) => {
-    if (err) {
-      console.error('Error closing the database:', err.message);
-    } else {
-      console.log('Database connection closed.');
-    }
-    process.exit(0);
-  });
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
 });
