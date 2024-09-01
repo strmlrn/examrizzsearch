@@ -1,15 +1,24 @@
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
+const config = require('./config');
 
 const app = express();
-const port = 3000;
 
-// Enable CORS for all routes
-app.use(cors());
+// Enable CORS for allowed origins
+app.use(cors({
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true);
+    if (config.allowedOrigins.indexOf(origin) === -1) {
+      var msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  }
+}));
 
 // Connect to the SQLite database
-const db = new sqlite3.Database('./examrizz_content.db', (err) => {
+const db = new sqlite3.Database(config.databasePath, (err) => {
   if (err) {
     console.error('Error connecting to the database:', err.message);
   } else {
@@ -42,8 +51,8 @@ app.get('/api/search', (req, res) => {
 });
 
 // Start the server
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+app.listen(config.port, () => {
+  console.log(`Server running at http://localhost:${config.port}`);
 });
 
 // Close the database connection when the server is stopped
