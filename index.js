@@ -90,20 +90,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
         addToRecentSearches(query);
 
-        fetch(`http://localhost:3000/api/search?q=${encodeURIComponent(query)}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(results => {
-                displayResults(results);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                resultsDiv.innerHTML = `<p>An error occurred while searching. Please try again later.</p>`;
-            });
+      fetch(`https://api.examrizzsearch.com/api/search?q=${encodeURIComponent(query)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(results => {
+            displayResults(results);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            resultsDiv.innerHTML = `<p>An error occurred while searching. Please try again later.</p>`;
+        });
     }
 
     function displayResults(results) {
