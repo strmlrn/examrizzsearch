@@ -1,13 +1,16 @@
+// Load environment variables from the .env file
+require('dotenv').config();
+
 const express = require('express');
 const {Storage} = require('@google-cloud/storage');
 
 // Initialize Express app
 const app = express();
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8080; // Use environment variable or default to 8080
 
 // Initialize Google Cloud Storage client
 const storage = new Storage();
-const BUCKET_NAME = 'examrizzsearch';
+const BUCKET_NAME = process.env.BUCKET_NAME; // Use environment variable for bucket name
 const bucket = storage.bucket(BUCKET_NAME);
 
 // Define a route for searching
