@@ -3,17 +3,15 @@ const mysql = require('mysql2');
 const cors = require('cors');
 const dotenv = require('dotenv');
 
-dotenv.config(); // Load environment variables
+dotenv.config();
 
 const app = express();
 
-// Enable CORS for examrizzsearch.com
 app.use(cors({
   origin: ['https://www.examrizzsearch.com', 'https://examrizzsearch.com'],
   optionsSuccessStatus: 200
 }));
 
-// Create MySQL connection pool
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
@@ -23,7 +21,6 @@ const pool = mysql.createPool({
   connectionLimit: 10
 });
 
-// Test database connection
 pool.getConnection((err, connection) => {
   if (err) {
     console.error('Error connecting to the database:', err);
@@ -37,7 +34,6 @@ app.get('/test', (req, res) => {
   res.json({ message: 'Server is working!' });
 });
 
-// Search API endpoint
 app.get('/api/search', (req, res) => {
   const query = req.query.q;
   
@@ -62,19 +58,16 @@ app.get('/api/search', (req, res) => {
   });
 });
 
-// Health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK' });
 });
 
-// Start the server
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Server is running on http://0.0.0.0:${port}`);
 });
 
-// Graceful shutdown
 process.on('SIGINT', () => {
   pool.end((err) => {
     if (err) {
