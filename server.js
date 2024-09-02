@@ -16,6 +16,8 @@ app.use(cors({
 }));
 
 // Create MySQL connection pool
+const fs = require('fs');
+
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
@@ -24,13 +26,11 @@ const pool = mysql.createPool({
   database: process.env.DB_NAME,
   connectionLimit: 10,
   ssl: {
-    rejectUnauthorized: false
+    ca: fs.readFileSync(__dirname + '/server-ca.pem')
   }
   // If you're using the Cloud SQL Proxy, uncomment the next line and comment out the host line above
   // socketPath: '/cloudsql/[maximal-coast-433811-g4]:us-central1:examrizzsearch'
 });
-
-
 
 
 // Test database connection
