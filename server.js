@@ -15,13 +15,13 @@ app.use(cors({
 
 // Create MySQL connection pool
 const pool = mysql.createPool({
-  host: process.env.DB_HOST || '/cloudsql/[YOUR-PROJECT-ID]:us-central1:examrizzsearch',
+  host: process.env.DB_HOST || '/cloudsql/[maximal-coast-433811-g4]:us-central1:examrizzsearch',
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   connectionLimit: 10,
   // If you're using the Cloud SQL Proxy, uncomment the next line and comment out the host line above
-  // socketPath: '/cloudsql/[YOUR-PROJECT-ID]:us-central1:examrizzsearch'
+  // socketPath: '/cloudsql/[maximal-coast-433811-g4]:us-central1:examrizzsearch'
 });
 
 // Test database connection
