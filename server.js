@@ -10,8 +10,8 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-  origin: ['https://www.examrizzsearch.com', 'https://examrizzsearch.com'],
-  optionsSuccessStatus: 200
+  origin: ['https://examrizzsearch.com', 'https://www.examrizzsearch.com'],
+  credentials: true
 }));
 
 const pool = mysql.createPool({
