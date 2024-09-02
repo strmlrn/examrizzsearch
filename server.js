@@ -8,8 +8,10 @@ dotenv.config(); // Load environment variables
 const app = express();
 
 // Enable CORS for examrizzsearch.com
+const cors = require('cors');
+
 app.use(cors({
-  origin: 'https://www.examrizzsearch.com','https://examrizzsearch.com',
+  origin: ['https://www.examrizzsearch.com', 'https://examrizzsearch.com'],
   optionsSuccessStatus: 200
 }));
 
