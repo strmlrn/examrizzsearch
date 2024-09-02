@@ -9,7 +9,7 @@ const app = express();
 
 // Enable CORS for examrizzsearch.com
 app.use(cors({
-  origin: 'https://www.examrizzsearch.com',https://examrizzsearch.com',
+  origin: 'https://www.examrizzsearch.com','https://examrizzsearch.com',
   optionsSuccessStatus: 200
 }));
 
