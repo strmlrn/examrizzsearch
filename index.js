@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         addToRecentSearches(query);
 
-    fetch(`http://35.195.0.126:3000/api/search?q=${encodeURIComponent(query)}`)
+    fetch(`https://35.195.0.126:3000/api/search?q=${encodeURIComponent(query)}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
