@@ -2,6 +2,8 @@ const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const https = require('https');
+const fs = require('fs');
 
 dotenv.config();
 
@@ -62,10 +64,15 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK' });
 });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 443;
 
-app.listen(port, '0.0.0.0', () => {
-  console.log(`Server is running on http://0.0.0.0:${port}`);
+const options = {
+  key: fs.readFileSync('/path/to/private-key.pem'),
+  cert: fs.readFileSync('/path/to/certificate.pem')
+};
+
+https.createServer(options, app).listen(port, '0.0.0.0', () => {
+  console.log(`Server is running on https://0.0.0.0:${port}`);
 });
 
 process.on('SIGINT', () => {
