@@ -15,6 +15,10 @@ app.use(cors({
   optionsSuccessStatus: 200
 }));
 
+app.get('/test', (req, res) => {
+  res.json({ message: 'Server is working!' });
+});
+
 // Create MySQL connection pool
 const fs = require('fs');
 
