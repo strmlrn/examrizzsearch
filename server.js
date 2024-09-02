@@ -8,34 +8,20 @@ dotenv.config(); // Load environment variables
 const app = express();
 
 // Enable CORS for examrizzsearch.com
-const cors = require('cors');
-
 app.use(cors({
   origin: ['https://www.examrizzsearch.com', 'https://examrizzsearch.com'],
   optionsSuccessStatus: 200
 }));
 
-app.get('/test', (req, res) => {
-  res.json({ message: 'Server is working!' });
-});
-
 // Create MySQL connection pool
-const fs = require('fs');
-
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  connectionLimit: 10,
-  ssl: {
-    ca: fs.readFileSync(__dirname + '/server-ca.pem')
-  }
-  // If you're using the Cloud SQL Proxy, uncomment the next line and comment out the host line above
-  // socketPath: '/cloudsql/[maximal-coast-433811-g4]:us-central1:examrizzsearch'
+  connectionLimit: 10
 });
-
 
 // Test database connection
 pool.getConnection((err, connection) => {
@@ -45,6 +31,10 @@ pool.getConnection((err, connection) => {
   }
   console.log('Successfully connected to the database.');
   connection.release();
+});
+
+app.get('/test', (req, res) => {
+  res.json({ message: 'Server is working!' });
 });
 
 // Search API endpoint
@@ -80,7 +70,7 @@ app.get('/health', (req, res) => {
 // Start the server
 const port = process.env.PORT || 3000;
 
-app.listen(port, 'localhost', () => {
+app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
 
