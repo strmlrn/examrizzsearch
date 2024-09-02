@@ -1,40 +1,83 @@
-// Load environment variables from the .env file
-require('dotenv').config();
-
 const express = require('express');
-const {Storage} = require('@google-cloud/storage');
+const mysql = require('mysql2');
+const cors = require('cors');
+const dotenv = require('dotenv');
 
-// Initialize Express app
+dotenv.config(); // Load environment variables
+
 const app = express();
-const port = process.env.PORT || 8080; // Use environment variable or default to 8080
 
-// Initialize Google Cloud Storage client
-const storage = new Storage();
-const BUCKET_NAME = process.env.BUCKET_NAME; // Use environment variable for bucket name
-const bucket = storage.bucket(BUCKET_NAME);
+// Enable CORS for examrizzsearch.com
+app.use(cors({
+  origin: 'https://examrizzsearch.com',
+  optionsSuccessStatus: 200
+}));
 
-// Define a route for searching
-app.get('/search', async (req, res) => {
-    try {
-        const query = req.query.query;
-        if (!query) {
-            return res.status(400).json({ error: 'Query parameter is required' });
-        }
+// Create MySQL connection pool
+const pool = mysql.createPool({
+  host: process.env.DB_HOST || '/cloudsql/[YOUR-PROJECT-ID]:us-central1:examrizzsearch',
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  connectionLimit: 10,
+  // If you're using the Cloud SQL Proxy, uncomment the next line and comment out the host line above
+  // socketPath: '/cloudsql/[YOUR-PROJECT-ID]:us-central1:examrizzsearch'
+});
 
-        // List files in the bucket
-        const [files] = await bucket.getFiles();
-        const results = files
-            .map(file => file.name)
-            .filter(name => name.includes(query));
+// Test database connection
+pool.getConnection((err, connection) => {
+  if (err) {
+    console.error('Error connecting to the database:', err);
+    return;
+  }
+  console.log('Successfully connected to the database.');
+  connection.release();
+});
 
-        res.json(results);
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+// Search API endpoint
+app.get('/api/search', (req, res) => {
+  const query = req.query.q;
+  
+  if (!query) {
+    return res.status(400).json({ error: 'Query parameter is required' });
+  }
+
+  const sql = `
+    SELECT id, title, content, file_type, file_path
+    FROM tsa_content
+    WHERE MATCH(title, content) AGAINST(? IN NATURAL LANGUAGE MODE)
+    LIMIT 20
+  `;
+  const params = [query];
+
+  pool.query(sql, params, (err, results) => {
+    if (err) {
+      console.error('Error executing search query:', err);
+      return res.status(500).json({ error: 'An error occurred while searching' });
     }
+    res.json(results);
+  });
+});
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'OK' });
 });
 
 // Start the server
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+  console.log(`Server running at http://localhost:${port}`);
+});
+
+// Graceful shutdown
+process.on('SIGINT', () => {
+  pool.end((err) => {
+    if (err) {
+      console.error('Error closing the database pool:', err);
+    } else {
+      console.log('Database pool closed.');
+    }
+    process.exit(0);
+  });
 });
