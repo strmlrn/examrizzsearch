@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
         addToRecentSearches(query);
 
         // Update this URL to your new backend URL
-        fetch(`https://35.195.0.126.com/api/search?q=${encodeURIComponent(query)}`)
+        fetch(`https://api.examrizzsearch.com/api/search?q=${encodeURIComponent(query)}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
