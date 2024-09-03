@@ -62,8 +62,8 @@ app.get('/health', (req, res) => {
 const port = process.env.PORT || 443;
 
 const options = {
-  key: fs.readFileSync('/etc/ssl/examrizzsearch/privkey.pem'),
-  cert: fs.readFileSync('/etc/ssl/examrizzsearch/fullchain.pem')
+  key: fs.readFileSync('/etc/letsencrypt/live/api.examrizzsearch.com/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/api.examrizzsearch.com/fullchain.pem')
 };
 
 https.createServer(options, app).listen(port, '0.0.0.0', () => {
