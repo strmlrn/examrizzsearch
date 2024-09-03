@@ -5,7 +5,7 @@ const { MongoClient } = require('mongodb');
 const https = require('https');
 const fs = require('fs');
 
-dotenv.config();
+require('dotenv').config();
 
 const app = express();
 
