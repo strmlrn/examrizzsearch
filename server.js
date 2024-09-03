@@ -71,8 +71,8 @@ const options = {
   cert: fs.readFileSync('/etc/ssl/examrizzsearch/fullchain.pem')
 };
 
-https.createServer(options, app).listen(port, '0.0.0.0', () => {
-  console.log(`Server is running on https://0.0.0.0:${port}`);
+https.createServer(options, app).listen(port, '35.195.0.126', () => {
+  console.log(`Server running on https://35.195.0.126:${port}`);
 });
 
 process.on('SIGINT', () => {
