@@ -8,6 +8,8 @@ const fs = require('fs');
 
 const app = express();
 
+console.log('MONGODB_URI from env:', process.env.MONGODB_URI);
+
 app.use(cors({
   origin: ['https://examrizzsearch.com', 'https://www.examrizzsearch.com'],
   credentials: true
