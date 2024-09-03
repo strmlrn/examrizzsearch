@@ -67,7 +67,7 @@ const options = {
 };
 
 https.createServer(options, app).listen(port, '0.0.0.0', () => {
-  console.log(`Server is running on https://0.0.0.0:${port}`);
+  console.log(`HTTPS server running on https://0.0.0.0:${port}`);
 });
 
 process.on('SIGINT', async () => {
