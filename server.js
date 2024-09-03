@@ -56,7 +56,7 @@ app.get('/api/search', async (req, res) => {
 });
 
 app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'OK' });
+ res.status(200).json({ status: 'OK', database: 'Connected' });
 });
 
 const port = process.env.PORT || 443;
@@ -75,3 +75,4 @@ process.on('SIGINT', async () => {
   console.log('Database connection closed.');
   process.exit(0);
 });
+
